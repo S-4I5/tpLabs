@@ -22,7 +22,7 @@ namespace iakov{
 
     public:
 
-        IncorrectTriangle() : reason_("This triangle can't exist!") {}
+        IncorrectTriangle() : reason_("Incorrect triangle!") {}
 
         [[nodiscard]] const char * what() const override { return reason_; }
 
@@ -82,6 +82,7 @@ namespace iakov{
     public:
 
         Diamond(double x1, double y1, double x2, double y2, double x3, double y3){
+        try{
             if((x1 == x2 && y1 == y3) || (x1 == x3 && y1 == y2)){
                 center_.x_ = x1; center_.y_ = y1;
                 setPoints(x2, y2, x3, y3);
@@ -94,7 +95,10 @@ namespace iakov{
                 center_.x_ = x3; center_.y_ = y3;
                 setPoints(x2, y2, x1, y1);
             }
-            else{}
+            else{ throw IncorrectTriangle(); }
+        } catch(std::exeption &error){
+               std::cerr << std::endl << error.what() << std::endl;
+               exit(1);
         }
 
         double getArea() override{
