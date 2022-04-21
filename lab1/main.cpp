@@ -22,7 +22,7 @@ namespace iakov{
 
     public:
 
-        IncorrectTriangle() : reason_("Incorrect triangle!") {}
+        IncorrectTriangle() : reason_("Incorrect triangle for diamond!") {}
 
         [[nodiscard]] const char * what() const override { return reason_; }
 
@@ -67,17 +67,7 @@ namespace iakov{
                 point1_.x_ = x2; point1_.y_ = y2;
                 point2_.x_ = x1; point2_.y_ = y1;
             }
-            try {
-                if(isTriangleCorrect()) throw IncorrectTriangle();
-            }catch (std::exception &error){
-                std::cerr << std::endl << error.what() << std::endl;
-                exit(1);
-            }
         }
-
-        [[nodiscard]] bool isTriangleCorrect() const{
-            return point1_.x_ - center_.x_ + point2_.y_ - center_.y_ > sqrt(pow(point1_.x_ - center_.x_, 2) + pow(point2_.y_ - center_.y_, 2));
-        };
 
     public:
 
@@ -96,12 +86,13 @@ namespace iakov{
                 setPoints(x2, y2, x1, y1);
             }
             else{ throw IncorrectTriangle(); }
-        } catch(std::exeption &error){
-               std::cerr << std::endl << error.what() << std::endl;
-               exit(1);
+        } catch(std::exception &error) {
+            std::cerr << std::endl << error.what() << std::endl;
+            exit(1);
+        }
         }
 
-        double getArea() override{
+        double getArea() override {
             return abs(point1_.x_ - center_.x_ )* abs(point2_.y_ - center_.y_) * 2;
         }
 
@@ -195,7 +186,7 @@ namespace iakov{
         point_t point2_{};
         point_t point3_{};
 
-        [[nodiscard]] bool isTriangleCorrect() const{
+        /*[[nodiscard]] bool isTriangleCorrect() const{
 
             double side1 = std::sqrt(std::pow(point1_.x_-point2_.x_, 2) + std::pow(point1_.y_-point2_.y_, 2));
             double side2 = std::sqrt(std::pow(point2_.x_-point3_.x_, 2) + std::pow(point2_.y_-point3_.y_, 2));
@@ -203,7 +194,7 @@ namespace iakov{
 
             return std::min(side1, std::min(side2,side3))
                    + (side3 + side2 + side1 - std::max(side1, std::max(side2,side3))) > std::max(side1, std::max(side2,side3));
-        }
+        }*/
 
     public:
 
@@ -213,12 +204,6 @@ namespace iakov{
             point2_.x_ = x2;point2_.y_ = y2;
             point3_.x_ = x3;point3_.y_ = y3;
 
-            try {
-                if(!isTriangleCorrect()) throw IncorrectTriangle();
-            }catch (std::exception &error){
-                std::cerr << std::endl << error.what() << std::endl;
-                exit(1);
-            }
         };
 
         double getArea() override{
@@ -266,13 +251,13 @@ void testShape(const std::shared_ptr<iakov::Shape>& shape);
 
 int main(){
 
-    std::shared_ptr<iakov::Rectangle> rectangle(new iakov::Rectangle(1,1,2,2));
+    std::shared_ptr<iakov::Rectangle> rectangle(new iakov::Rectangle(-1,-2,3,2));
 
     testShape(rectangle);
 
     std::cout << "\n";
 
-    std::shared_ptr<iakov::Triangle> triangle(new iakov::Triangle(1,40,423,4,10,-10));
+    std::shared_ptr<iakov::Triangle> triangle(new iakov::Triangle(1,0,4,1,3,5));
 
     testShape(triangle);
 
