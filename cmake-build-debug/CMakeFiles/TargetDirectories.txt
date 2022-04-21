@@ -1,3 +1,0 @@
-D:/PTcodes/c++/TP/cmake-build-debug/CMakeFiles/untitled1.dir
-D:/PTcodes/c++/TP/cmake-build-debug/CMakeFiles/edit_cache.dir
-D:/PTcodes/c++/TP/cmake-build-debug/CMakeFiles/rebuild_cache.dir
