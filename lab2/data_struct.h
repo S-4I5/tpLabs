@@ -126,7 +126,9 @@ namespace iakov{
         }
 
         std::string data = "";
-        in >> StringIO{data};
+        //in >> StringIO{data};
+
+        in >> data;
 
         if(data.find("key") != -1){
             dest.key = data[3] - 48;
@@ -134,7 +136,6 @@ namespace iakov{
             in.setstate(std::ios::failbit);
         }
         return in;
-
     }
 
     std::istream &operator>>(std::istream &in, DoubleIO &&dest)
