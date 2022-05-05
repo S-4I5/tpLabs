@@ -31,9 +31,9 @@ int main(){
 
     in >> d;
 
-    std::cout << d << "1";
+    std::cout << "1" <<  d << "1" << "\n";
 
-    std::cout << sus << "2";*/
+    std::cout << "2" << sus << "2" << "\n";*/
 
     return 0;
 }

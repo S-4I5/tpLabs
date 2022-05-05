@@ -1,10 +1,17 @@
-(:key3 "No madness?":key1 22332.0E-1:key2 'c':)
-(:key4 "Why fwaa u the same?":key1 666.0E-1:key2 'g':)
-(:key3 "Cry about it":key1 4535.0E-1:key2 'g':)
+(((((:key3 "No madness?":key1 22332.0E-1:key2 'c':)
+(:key4 "Why fwaa u the same?":key1 666.0E-1:key2 'g':)(:key3 "Cry about it":key1 4535.0E-1:key2 'g':)
+
+фцпафцпфцп422кфафц
+фпцфцп42332
+
 (:key3 "Do not care do not askXD":ke13:key2 'c':)
-(:key3 "Why are u the same?":key1 666.0E-1:key2 'g':)
-(:key1 2442.0E-13:key3 "it's better for u to work fine":key2 'g':)
+(:key3 "Why are u the
+ same?":key1 666.0E-1:key2 'g':)
+(((:key1 2442.0E-13:key3 "it's better for u to work fine":key2 'g':)
 (:key3 "Why are u the same?":key1 666.0E-1:key2 'E':)
 (:key3 "DoD":"ke13:"key2" 'c':)
 (:key3 "I'm not the sameXD":key1 666.0E-1:key2 'E':)
 (:key3 "DoD":"ke13:key2 'c':)
+
+
+(((((((

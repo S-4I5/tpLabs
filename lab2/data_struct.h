@@ -222,11 +222,14 @@ namespace iakov{
             std::string buffer = "";
             std::getline(in, buffer, '(');
 
-            in >> DelimiterIO{':'};
+            //in >> DelimiterIO{':'};
 
-            if(!in) {
-                in.setstate(std::ios::failbit);
-                return in;
+            char c = '0';
+
+            in >> c;
+
+            while(c != ':' && !in.eof()){
+                in >> c;
             }
 
             Data input{};
@@ -260,6 +263,11 @@ namespace iakov{
 
             in >> DelimiterIO{')'};
 
+            if(in.eof()){
+                in.setstate(std::ios::eofbit);
+                return in;
+            }
+
             if (in) {
                 dest = input;
                 succ = true;
@@ -288,7 +296,6 @@ namespace iakov{
         else if(first.key3 > second.key3) return false;
         return false;
     }
-
 }
 
 #endif //TP_DATA_STRUCT_H
