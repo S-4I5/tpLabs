@@ -107,7 +107,6 @@ namespace iakov{
 
     }
 
-
     std::istream &operator>>(std::istream &in, StringIO &&dest)
     {
         std::istream::sentry sentry(in);
@@ -151,7 +150,7 @@ namespace iakov{
         return in;
     }
 
-    std::istream &operator>>(std::istream &in, Data &dest){
+    /*std::istream &operator>>(std::istream &in, Data &dest){
 
         std::istream::sentry sentry(in);
         if (!sentry)
@@ -201,6 +200,71 @@ namespace iakov{
             }
         }
 
+        return in;
+    }*/
+
+    std::istream &operator>>(std::istream &in, Data &dest){
+
+        std::istream::sentry sentry(in);
+        if (!sentry)
+        {
+            return in;
+        }
+
+        bool succ = false;
+
+        while(!succ) {
+
+            if (!in) {
+                in.clear();
+            }
+
+            std::string buffer = "";
+            std::getline(in, buffer, '(');
+
+            in >> DelimiterIO{':'};
+
+            if(!in) {
+                in.setstate(std::ios::failbit);
+                return in;
+            }
+
+            Data input{};
+
+            bool args[3] = {false, false, false};
+
+            int curKey = 0;
+
+            for (int i = 0; i < 3; ++i) {
+                in >> LabelIO{curKey};
+                if (!args[curKey - 1]) {
+                    args[curKey - 1] = true;
+                    switch (curKey) {
+                        case 1:
+                            in >> DoubleIO{input.key1};
+                            break;
+                        case 2:
+                            in >> CharIO{input.key2};
+                            break;
+                        case 3:
+                            in >> StringIO{input.key3};
+                            break;
+                        default:
+                            break;
+                    }
+                } else {
+                    if (in) in.setstate(std::ios::failbit);
+                }
+                in >> DelimiterIO{':'};
+            }
+
+            in >> DelimiterIO{')'};
+
+            if (in) {
+                dest = input;
+                succ = true;
+            }
+        }
         return in;
     }
 
