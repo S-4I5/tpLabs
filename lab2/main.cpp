@@ -12,7 +12,7 @@ int main(){
 
     std::copy(std::istream_iterator<iakov::Data>(in),std::istream_iterator<iakov::Data>(),std::back_inserter(data));
 
-    if(!in) std::cout << "no!";
+    if(in) std::cout << "no!";
 
     std::sort(std::begin(data), std::end(data));
 
@@ -21,7 +21,13 @@ int main(){
 
     /*std::ifstream in("D:\\PTcodes\\c++\\TP\\lab2\\input2.txt");
 
-    std::string sus = "cum"; char d = '0';
+    std::vector<int> data;
+
+    std::copy(std::istream_iterator<int>(in),std::istream_iterator<int>(),std::back_inserter(data));
+
+    if(!in) std::cout << "no!";
+
+    /*std::string sus = "cum"; char d = '0';
 
     //in.setstate(std::ios::failbit);
 

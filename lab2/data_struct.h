@@ -150,59 +150,6 @@ namespace iakov{
         return in;
     }
 
-    /*std::istream &operator>>(std::istream &in, Data &dest){
-
-        std::istream::sentry sentry(in);
-        if (!sentry)
-        {
-            return in;
-        }
-
-        bool succ = false;
-
-        while(!succ && !in.eof()) {
-
-            std::string buffer;
-            std::getline(in, buffer);
-
-            std::istringstream iss(buffer);
-
-            Data input{};
-
-            bool args[3] = {false, false, false};
-
-            int curKey = 0;
-
-            iss >> DelimiterIO{'('};
-
-            for (int i = 0; i < 3; ++i) {
-                iss >> DelimiterIO{':'};
-                iss >> LabelIO{curKey};
-                if (!args[curKey - 1]) {
-                    args[curKey - 1] = true;
-                    switch (curKey) {
-                        case 1:iss >> DoubleIO{input.key1};break;
-                        case 2:iss >> CharIO{input.key2};break;
-                        case 3:iss >> StringIO{input.key3};break;
-                        default: break;
-                    }
-                } else {
-                    if (iss) iss.setstate(std::ios::failbit);
-                }
-            }
-
-            iss >> DelimiterIO{':'};
-            iss >> DelimiterIO{')'};
-
-            if(iss){
-                succ = true;
-                dest = input;
-            }
-        }
-
-        return in;
-    }*/
-
     std::istream &operator>>(std::istream &in, Data &dest){
 
         std::istream::sentry sentry(in);
@@ -222,14 +169,16 @@ namespace iakov{
             std::string buffer = "";
             std::getline(in, buffer, '(');
 
-            //in >> DelimiterIO{':'};
-
             char c = '0';
 
             in >> c;
 
-            while(c != ':' && !in.eof()){
+            while(c == '(' && !in.eof()){
                 in >> c;
+            }
+
+            if(c != ':'){
+                continue;
             }
 
             Data input{};
