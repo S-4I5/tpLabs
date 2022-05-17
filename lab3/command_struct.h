@@ -82,7 +82,7 @@ namespace iakov{
 
         in >> currentCommand;
 
-        std::cout << currentCommand;
+        //td::cout << currentCommand;
 
         std::string commandNames [] = {"AREA", "MAX", "MIN", "COUNT", "ECHO","INFRAME"};
 
@@ -208,6 +208,17 @@ namespace iakov{
 
         double answer = 0;
 
+        /*bool comparator;
+
+        if(argumentCode == -1){
+            answer = getArea(*std::min_element(dest.polygons.cbegin(), dest.polygons.cend(), {comparator}));
+        }else if(argumentCode == -2){
+            answer = (*std::min_element(dest.polygons.cbegin(), dest.polygons.cend(), [](const Polygon &f,const Polygon &s){
+                if(f.points.size() < s.points.size()) return true;
+                return false;
+            })).points.size();
+        }*/
+
         if(argumentCode == -1){
             answer = getArea(*std::min_element(dest.polygons.cbegin(), dest.polygons.cend(), [](const Polygon &f,const Polygon &s){
                 if(getArea(f) < getArea(s)) return true;
@@ -278,7 +289,10 @@ namespace iakov{
         Polygon example{};
         in >> example;
 
-        if(!in) return in;
+        if(!in){
+            in.setstate(std::ios::failbit);
+            return in;
+        }
 
         auto compX = [](const Point &f,const Point &s){
             return (f.x_ < s.x_);};
@@ -320,10 +334,12 @@ namespace iakov{
         bool answer = left <= curLeftDown.x_ && down <= curLeftDown.y_
                              &&right >= curRightTop.x_ && top >= curRightTop.y_;
 
+        std::cout << "\nANSWER";
+
         if(answer)
-            std::cout << "Yes!";
+            std::cout << "Yes!\n";
         else
-            std::cout << "No!";
+            std::cout << "No!\n";
 
         return in;
     }
@@ -338,23 +354,30 @@ namespace iakov{
         Polygon example{};
         in >> example;
 
-        if(!in) return in;
+        if(!in) {
+            return in;
+        }
 
-        std::vector<Polygon>::iterator begin  = dest.polygons.begin();
+        std::vector<Polygon> newDest;
 
         int answer = 0;
 
-        for (int i = 0; i < dest.polygons.size(); ++i) {
-            Polygon &polygon = dest.polygons[i];
-            if(polygon.points.size() != example.points.size()) continue;
-            if (std::equal(polygon.points.begin(), polygon.points.end(), example.points.begin(),[]( Point f,  Point s){
-                return f.x_ == s.x_ && s.y_ == f.y_;
-            })) {
-                dest.polygons.insert(dest.polygons.begin()+i, polygon);
-                i++;
-                answer++;
+        std::copy_if(dest.polygons.begin(),  dest.polygons.end(), std::back_inserter(newDest), [ &example, &newDest, &answer](const Polygon& polygon){
+
+            if(polygon.points.size() != example.points.size()) {
+                return true;
             }
-        }
+
+            if (std::equal(polygon.points.begin(), polygon.points.end(), example.points.begin(),[](const Point& f,const  Point& s){
+                return f.x_ == s.x_ && s.y_ == f.y_;
+            })){
+                answer++;
+                newDest.push_back(polygon);
+            }
+            return true;
+        });
+
+        dest.polygons = newDest;
 
         std::cout << "\nANSWER " << answer << "\n";
 
@@ -390,7 +413,6 @@ namespace iakov{
                 in >> EchoIO{dest.polygons};
                 break;
             case 6:
-                in >> EchoIO{dest.polygons};
                 in >> InFrameIO{dest.polygons};
                 break;
             default:
@@ -399,7 +421,7 @@ namespace iakov{
         }
 
         if(!in) {
-            std::cout << "INCORRECT COMMAND!";
+            std::cout << "<INCORRECT COMMAND!>\n";
             in.clear();
             std::string buf;
             std::getline(in, buf);
@@ -407,8 +429,6 @@ namespace iakov{
 
         return in;
     }
-
-
 }
 
 #endif //TP_COMMAND_STRUCT_H

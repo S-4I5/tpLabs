@@ -79,6 +79,7 @@ namespace iakov {
 
         return out;
     }
+
 }
 
 #endif //TP_POINT_STRUCT_H

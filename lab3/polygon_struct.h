@@ -9,6 +9,7 @@
 #include "point_struct.h"
 #include <iostream>
 #include <string>
+#include <numeric>
 
 namespace iakov {
 
@@ -25,26 +26,21 @@ namespace iakov {
             return in;
         }
 
-        bool succ = false;
-
-        while(!succ) {
-
-            if(!in){
-                in.clear();
-                std::string buf;
-                std::getline(in, buf);
-            }
-
-            if(in.eof()){
+            /*if(in.eof()){
                 in.setstate(std::ios::failbit);
                 return in;
-            }
+            }*/
 
             Polygon input{};
 
             int number = 0;
 
             in >> number;
+
+            if(number < 1){
+                in.setstate(std::ios::failbit);
+                return in;
+            }
 
             for (int i = 0; i < number; ++i) {
 
@@ -56,9 +52,7 @@ namespace iakov {
 
             if (in) {
                 dest = input;
-                succ = true;
             }
-        }
 
         return in;
     }
@@ -67,6 +61,11 @@ namespace iakov {
 
         std::ostream::sentry sentry(out);
         if (!sentry) {
+            return out;
+        }
+
+        if(dest.points.empty()){
+            out << "Empty!";
             return out;
         }
 
@@ -80,9 +79,10 @@ namespace iakov {
     }
 
     double getArea(const Polygon &polygon){
-        double answer = 0;
 
-        if(polygon.points.size() < 3) return answer;
+        if(polygon.points.size() < 3) return 0.0;
+
+        /*double answer = 0;
 
         for (int i = 0; i < polygon.points.size(); ++i) {
             answer += polygon.points[i].x_ * polygon.points[(i+1)%polygon.points.size()].y_;
@@ -91,7 +91,18 @@ namespace iakov {
             //std::cout << polygon.points[i].y_ << " * " << polygon.points[(i+1)%polygon.points.size()].x_ << "\n";
         }
 
-        return abs(answer)/2;
+        return abs(answer)/2;*/
+
+        int i  = 0;
+
+        double a = std::inner_product(polygon.points.cbegin(), polygon.points.cend(), polygon.points.begin()+1, 0, , 1);
+
+        return abs(std::accumulate(polygon.points.cbegin(), polygon.points.cend(), 0, [&i, &polygon](double accum,const Point& point){
+            i = (i++)%polygon.points.size();
+            return accum + point.x_ * polygon.points[i].y_ -
+                    point.y_ * polygon.points[i].x_;
+        }))/2;
+
     }
 }
 
