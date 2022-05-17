@@ -17,7 +17,6 @@ namespace iakov{
         std::string key3 = "Error";
     };
 
-
     struct DelimiterIO {
         char exp;
     };
@@ -25,7 +24,6 @@ namespace iakov{
     struct LabelIO {
         int &key;
     };
-
 
     struct CharIO {
         char &exp;

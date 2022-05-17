@@ -52,12 +52,16 @@ public:
         return true;
     }
 
-    bool hasPoint(std::string&& name){
+    bool hasPoint(std::string& name){
         if(isPointExists(name) == -1) return false;
         return true;
     };
 
-    bool addPoint(std::string&& name){
+    bool hasPoint(std::string&& name){
+        return hasPoint(name);
+    };
+
+    bool addPoint(std::string& name){
         if(isPointExists(name) != -1) return false;
         if(numberOfPoints_ != 0){ matrix_->add(); }
         pointNames_->push_back(name);
@@ -65,7 +69,11 @@ public:
         return true;
     };
 
-    bool deletePoint(std::string&& name){
+    bool addPoint(std::string&& name){
+        return addPoint(name);
+    };
+
+    bool deletePoint(std::string& name){
 
         int pointIndex = isPointExists(name);
         if(pointIndex == -1) return false;
@@ -86,6 +94,10 @@ public:
         return true;
     };
 
+    bool deletePoint(std::string&& name){
+        return deletePoint(name);
+    };
+
     void print(){
         if(numberOfPoints_ == 0){ std::cout << "Graph is empty!" << std::endl; return;}
         for (int i = 0; i < numberOfPoints_; ++i) {
@@ -95,7 +107,7 @@ public:
         }
     };
 
-    bool deleteArc(std::string&& departmentPointName,std::string&& destinationPointName){
+    bool deleteArc(std::string& departmentPointName,std::string& destinationPointName){
 
         int first = isPointExists(departmentPointName);
         int second = isPointExists(destinationPointName);
@@ -107,11 +119,15 @@ public:
         return true;
     };
 
-    bool adArc(std::string&& departmentPointName,std::string&& destinationPointName, int mass){
+    bool deleteArc(std::string&& departmentPointName,std::string&& destinationPointName){
+        return deleteArc(departmentPointName, destinationPointName);
+    };
 
+    bool adArc(std::string& departmentPointName,std::string& destinationPointName, int mass){
         if(mass == 0) return false;
         int first = isPointExists(departmentPointName);
         int second = isPointExists(destinationPointName);
+
         if(first == -1 || second == -1) return false;
         if(isArcExists(first, second)) return false;
 
@@ -120,13 +136,21 @@ public:
         return true;
     }
 
+    bool adArc(std::string&& departmentPointName,std::string&& destinationPointName, int mass){
+        return adArc(departmentPointName, destinationPointName, mass);
+    }
+
     bool hasArcs(std::string& departmentPointName){
         int departmentPointIndex = isPointExists(departmentPointName);
         return hasArcs(departmentPointIndex);
     };
 
-    bool isArcExists(std::string&& departmentPointName,std::string&& destinationPointName){
+    bool isArcExists(std::string& departmentPointName,std::string& destinationPointName){
         return matrix_->operator()(isPointExists(departmentPointName), isPointExists(destinationPointName)) != 0;
+    }
+
+    bool isArcExists(std::string&& departmentPointName,std::string&& destinationPointName){
+        return isArcExists(departmentPointName,destinationPointName);
     }
 
     void wavePathFinderAlgorithm(std::string& departmentPointName,std::string& destinationPointName){

@@ -1,7 +1,9 @@
 #include <iostream>
+#include <fstream>
 #include "Graph.h"
+#include "command_struct.h"
 
-void testAll(std::string&& departmentPoint, std::string&& destinationPoint, Graph* graph){
+/*void testAll(std::string&& departmentPoint, std::string&& destinationPoint, Graph* graph){
 
     std::cout << "Wave: \n\n";
 
@@ -169,5 +171,14 @@ int main()
     loop();
 
     return 0;
+}*/
+
+int main(){
+    Graph graph;
+    /*while (std::cin >> CommandIO{graph});*/
+
+    std::ifstream in("D:\\PTcodes\\c++\\TP\\GRR\\input.txt");
+
+    while(in >> CommandIO{graph});
 }
 
