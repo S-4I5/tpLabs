@@ -5,6 +5,7 @@
 #include "iostream"
 #include <algorithm>
 #include <functional>
+#include <sstream>
 #include <numeric>
 #include "iofmtguard.h"
 
@@ -179,12 +180,12 @@ namespace iakov{
         in >> ArgumentIO{argumentCode, argumentNames};
 
         if(argumentCode == 0){
-            in.setstate(std::ios::failbit);
+            in.setstate(std::ios::badbit);
             return in;
         }
 
         if(!check(in)){
-            in.setstate(std::ios::failbit);
+            in.setstate(std::ios::badbit);
             return in;
         }
 
@@ -224,12 +225,12 @@ namespace iakov{
         in >> ArgumentIO{argumentCode, argumentNames};
 
         if(argumentCode == 0){
-            in.setstate(std::ios::failbit);
+            in.setstate(std::ios::badbit);
             return in;
         }
 
         if(!check(in)){
-            in.setstate(std::ios::failbit);
+            in.setstate(std::ios::badbit);
             return in;
         }
 
@@ -268,12 +269,12 @@ namespace iakov{
         in >> ArgumentIO{argumentCode, argumentNames};
 
         if(argumentCode == 0){
-            in.setstate(std::ios::failbit);
+            in.setstate(std::ios::badbit);
             return in;
         }
 
         if(!check(in)){
-            in.setstate(std::ios::failbit);
+            in.setstate(std::ios::badbit);
             return in;
         }
 
@@ -319,12 +320,12 @@ namespace iakov{
         in >> ArgumentIO{argumentCode, argumentNames};
 
         if(argumentCode == 0){
-            in.setstate(std::ios::failbit);
+            in.setstate(std::ios::badbit);
             return in;
         }
 
         if(!check(in)){
-            in.setstate(std::ios::failbit);
+            in.setstate(std::ios::badbit);
             return in;
         }
 
@@ -390,7 +391,7 @@ namespace iakov{
         in >> example;
 
         if(!check(in)){
-            in.setstate(std::ios::failbit);
+            in.setstate(std::ios::badbit);
             return in;
         }
 
@@ -443,7 +444,7 @@ namespace iakov{
         int i = -1;
 
         if(!check(in)){
-            in.setstate(std::ios::failbit);
+            in.setstate(std::ios::badbit);
             return in;
         }
 
@@ -462,39 +463,45 @@ namespace iakov{
             return in;
         }
 
+        std::string buffer = "";
+
+        std::getline(in, buffer);
+
+        std::istringstream commandStream(buffer);
+
         int commandCode = -1;
 
-        in >> CommandNameIO{commandCode };
+        commandStream >> CommandNameIO{commandCode };
 
         switch (commandCode) {
             case 1:
-                in >> AreaIO{dest.polygons};
+                commandStream >> AreaIO{dest.polygons};
                 break;
             case 2:
-                in >> MaxIO{dest.polygons};
+                commandStream >> MaxIO{dest.polygons};
                 break;
             case 3:
-                in >> MinIO{dest.polygons};
+                commandStream >> MinIO{dest.polygons};
                 break;
             case 4:
-                in >> CountIO{dest.polygons};
+                commandStream >> CountIO{dest.polygons};
                 break;
             case 5:
-                in >> EchoIO{dest.polygons};
+                commandStream >> EchoIO{dest.polygons};
                 break;
             case 6:
-                in >> InFrameIO{dest.polygons};
+                commandStream >> InFrameIO{dest.polygons};
                 break;
             default:
-                in.setstate(std::ios::failbit);
+                commandStream.setstate(std::ios::badbit);
                 break;
         }
 
-        if(!in && !in.eof()) {
+        if(commandStream.bad()) {
             std::cout << "\n<INCORRECT COMMAND!>\n";
-            in.clear();
+            /*in.clear();
             std::string buf;
-            std::getline(in, buf);
+            std::getline(in, buf);*/
         }
 
         return in;

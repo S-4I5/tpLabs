@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <fstream>
 #include "polygon_struct.h"
-#include "command_struct.h"
+#include "command_struct2.h"
 
 
 int main() {
@@ -17,5 +17,9 @@ int main() {
     std::cout << "Data:\n";
     std::copy(std::begin(data),std::end(data),std::ostream_iterator< iakov::Polygon >(std::cout, "\n"));
 
-    while(std::cin >> iakov::CommandIO{data});
+    std::ifstream userIn("D:\\PTcodes\\c++\\TP\\lab3\\userInput.txt");
+
+    //while(userIn >> iakov::CommandIO{data});
+
+    while(std::cin >>  iakov::CommandIO{data});
 }
