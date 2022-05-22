@@ -464,9 +464,7 @@ namespace iakov{
         }
 
         std::string buffer = "";
-
         std::getline(in, buffer);
-
         std::istringstream commandStream(buffer);
 
         int commandCode = -1;

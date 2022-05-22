@@ -1,0 +1,5 @@
+(:key3 "Do not care do not askXD":key1 89ULL:key2 #c(-1.0 1.0):)
+(:key3 "Do not care do not askXD":key1 -89ULL:key2 #c(2.0 1.0):)
+(:key3 "not askXD":key1 18446744073709551616ULL:key2 #c(3.0 1.0):)
+(:key3 "No madness?XD":key1 892322635255ULL:key2 #c(2.0 1.0):)
+(:key3 "Do not care do not askXD":key1 89232442424ull:key2 #c(3.0 6.0):)

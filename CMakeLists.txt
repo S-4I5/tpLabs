@@ -3,4 +3,4 @@ project(TP)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(TP lab3/command_struct2.h lab3/point_struct.h lab3/polygon_struct.h lab3/main.cpp lab3/iofmtguard.h)
+add_executable(TP help/lab2/data_struct.h help/lab2/main.cpp)

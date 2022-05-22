@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include "Graph.h"
-#include "command_struct.h"
+#include "command_struct2.h"
 
 /*void testAll(std::string&& departmentPoint, std::string&& destinationPoint, Graph* graph){
 
