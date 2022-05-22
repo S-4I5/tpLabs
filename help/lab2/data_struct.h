@@ -105,11 +105,10 @@ namespace iakov{
         }
 
         std::string data = "";
-        //in >> StringIO{data};
 
         in >> data;
 
-        if(data.find("key") != -1){
+        if(data.find("key") != -1 && data.size() == 4){
             dest.key = data[3] - 48;
         } else if (in){
             in.setstate(std::ios::failbit);
@@ -159,6 +158,8 @@ namespace iakov{
             return in;
         }
 
+        if(!in) return in;
+
         try{
             dest.ref = std::stoull(ull.c_str());
         }catch (std::exception &e){
@@ -167,8 +168,6 @@ namespace iakov{
 
         return in;
     }
-
-    bool isULLvalid(char );
 
     std::istream &operator>>(std::istream &in, Data &dest){
 
@@ -194,7 +193,8 @@ namespace iakov{
                     case 1:
                         in >> ULLIO{input.key1};
                         break;
-                        case 2:in >> ComplexIO{input.key2};
+                        case 2:
+                            in >> ComplexIO{input.key2};
                             break;
                         case 3:
                             in >> StringIO{input.key3};
@@ -203,7 +203,7 @@ namespace iakov{
                             break;
                 }
             } else {
-                if (in) in.setstate(std::ios::failbit);
+                in.setstate(std::ios::failbit);
             }
             in >> DelimiterIO{':'};
         }
@@ -223,7 +223,7 @@ namespace iakov{
             return out;
         }
         iofmtguard fmtguard(out);
-        out << std::setprecision(1) << "(:\"key1\" " << src.key1 << "ull:\"key2\" #c" << src.key2 << R"(:"key3" ")" << src.key3 << "\":)";
+        out << std::setprecision(2) << "(:\"key1\" " << src.key1 << "ull:\"key2\" #c" << src.key2 << R"(:"key3" ")" << src.key3 << "\":)";
         return out;
     }
 
