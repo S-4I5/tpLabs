@@ -10,9 +10,12 @@ int main(){
     std::vector<iakov::Data> data;
     std::ifstream in("D:\\PTcodes\\c++\\TP\\lab2\\input.txt");
 
-    std::copy(std::istream_iterator<iakov::Data>(in),std::istream_iterator<iakov::Data>(),std::back_inserter(data));
-
-    if(in) std::cout << "no!";
+    while(!in.eof()){
+        std::copy(std::istream_iterator<iakov::Data>(in),std::istream_iterator<iakov::Data>(),std::back_inserter(data));
+        if(!in && !in.eof()){
+            in.clear();
+        }
+    }
 
     std::sort(std::begin(data), std::end(data));
 

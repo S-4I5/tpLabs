@@ -21,7 +21,7 @@
 
 void defaultTest(){
 
-    auto* graph = new Graph();
+    auto* graph = new iakov::Graph();
 
     graph->addPoint("A");
 
@@ -52,7 +52,7 @@ void defaultTest(){
 
 void bellmanFordTest(){
 
-    auto* graph = new Graph();
+    auto* graph = new iakov::Graph();
 
     graph->addPoint("A");
 
@@ -77,7 +77,7 @@ void bellmanFordTest(){
 
 void loop(){
 
-    auto* graph = new Graph();
+    auto* graph = new iakov::Graph();
 
     graph->addPoint("A");
 
@@ -110,7 +110,7 @@ void loop(){
 }
 
 void graphTest(){
-    auto* graph = new Graph();
+    auto* graph = new iakov::Graph();
 
     std::cout << graph->addPoint("A") << ": A added\n";
 
@@ -150,6 +150,7 @@ void graphTest(){
 
     graph->print();
 
+
 }
 
 int main()
@@ -174,11 +175,12 @@ int main()
 }*/
 
 int main(){
-    Graph graph;
-    /*while (std::cin >> CommandIO{graph});*/
+
+    iakov::Graph graph;
 
     std::ifstream in("D:\\PTcodes\\c++\\TP\\GRR\\input.txt");
 
-    while(in >> CommandIO{graph});
+    while(in >> iakov::CommandIO{graph});
+
 }
 

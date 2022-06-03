@@ -187,6 +187,10 @@ namespace iakov{
 
         for (int i = 0; i < 3; ++i) {
             in >> LabelIO{curKey};
+            if(curKey < 1 || curKey > 3){
+                in.setstate(std::ios::failbit);
+                break;
+            }
             if (!args[curKey - 1]) {
                 args[curKey - 1] = true;
                 switch (curKey) {

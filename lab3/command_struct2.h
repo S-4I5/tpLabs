@@ -67,16 +67,15 @@ namespace iakov{
         in.get(check);
 
         while(check == ' ' && !in.eof()){
-            //std::cout << check << "\n";
             in.get(check);
         }
 
-        //std::cout << (int)check << "!\n";
 
-        if((!in || check != '\n') && !in.eof()) {
+        if(check != '\n' && check != '0') {
             printError(check);
             return false;
         }
+
         return true;
     }
 
@@ -468,6 +467,8 @@ namespace iakov{
         std::istringstream commandStream(buffer);
 
         int commandCode = -1;
+
+
 
         commandStream >> CommandNameIO{commandCode };
 

@@ -18,7 +18,15 @@ int main(){
         }
     }
 
-    std::sort(std::begin(data), std::end(data));
+    std::sort(std::begin(data), std::end(data), [](const iakov::Data first,const iakov::Data second ){
+        if(first.key1 < second.key1) return true;
+        else if(first.key1 > second.key1) return false;
+        if(abs(first.key2 - second.key2) > 0) return true;
+        else if(abs(first.key2 - second.key2) < 0) return false;
+        if(first.key3 < second.key3) return true;
+        else if(first.key3 > second.key3) return false;
+        return false;
+    });
 
     std::cout << "Data:\n";
     std::copy(std::begin(data),std::end(data),std::ostream_iterator< iakov::Data >(std::cout, "\n"));

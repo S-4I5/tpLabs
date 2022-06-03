@@ -9,382 +9,371 @@
 #include "sstream"
 #include "Graph.h"
 
-struct CommandIO{
-    Graph &graph;
-};
+namespace iakov {
 
-struct IndexIO{
-    int &index;
-    std::vector<std::string>& names;
-};
+    struct CommandIO {
+        Graph &graph;
+    };
 
-struct DelimiterIO {
-    char exp;
-};
+    struct IndexIO {
+        int &index;
+        std::vector<std::string> &names;
+    };
 
-struct StringIO {
-    std::string &ref;
-};
+    struct DelimiterIO {
+        char exp;
+    };
 
-struct IntIO{
-    int &ref;
-};
+    struct StringIO {
+        std::string &ref;
+    };
 
-struct AddPointIO{
-    Graph &graph;
-};
+    struct IntIO {
+        int &ref;
+    };
 
-struct AddArcIO{
-    Graph &graph;
-};
+    struct AddPointIO {
+        Graph &graph;
+    };
 
-struct HasArcIO{
-    Graph &graph;
-};
+    struct AddArcIO {
+        Graph &graph;
+    };
 
-struct HasPointIO{
-    Graph &graph;
-};
+    struct HasArcIO {
+        Graph &graph;
+    };
 
-struct DeleteAcrIO{
-    Graph &graph;
-};
+    struct HasPointIO {
+        Graph &graph;
+    };
 
-struct DeletePointIO{
-    Graph &graph;
-};
+    struct DeleteAcrIO {
+        Graph &graph;
+    };
 
-struct FindDistanceIO{
-    Graph &graph;
-};
+    struct DeletePointIO {
+        Graph &graph;
+    };
 
-template<class T>
-void printError(T& error){
-    std::cout << " ... " << error << " <- !";
-}
+    struct FindDistanceIO {
+        Graph &graph;
+    };
 
-bool check(std::istream &in){
-
-    if(!in){
-        printError("<INCORRECT ARGUMENT>");
-        return false;
+    template<class T>
+    void printError(T &error) {
+        std::cout << " ... " << error << " <- !\n";
     }
 
-    char check = '0';
+    bool check(std::istream &in) {
 
-    in.get(check);
+        if (!in) {
+            in.setstate(std::ios::badbit);
+            printError("<INCORRECT ARGUMENT>");
+            return false;
+        }
 
-    while(check == ' ' && !in.eof()){
+        char check = '0';
+
         in.get(check);
+
+        while (check == ' ' && !in.eof()) {
+            in.get(check);
+        }
+
+        if (check != '\n' && check != '0') {
+            std::cout << "\'" << check  << "\'" << '\n';
+            in.setstate(std::ios::badbit);
+            printError(check);
+            return false;
+        }
+
+        return true;
     }
 
-    if((!in || check != '\n') && in.eof()) {
-        std::cout << "ss1";
-        in.setstate(std::ios::badbit);
-        printError(check);
-        return false;
-    }
+    std::istream &operator>>(std::istream &in, DelimiterIO &&dest) {
 
-    return true;
-}
+        std::istream::sentry sentry(in);
+        if (!sentry) {
+            return in;
+        }
 
-std::istream &operator>>(std::istream &in, DelimiterIO &&dest){
+        char c = '0';
+        in >> c;
 
-    std::istream::sentry sentry(in);
-    if (!sentry)
-    {
+        if (in && c != dest.exp) in.setstate(std::ios::badbit);
+
         return in;
     }
 
-    char c = '0';
-    in >> c;
-
-    if(in && c != dest.exp) in.setstate(std::ios::badbit);
-
-    return in;
-}
-
-std::istream &operator>>(std::istream &in, StringIO &&dest)
-{
-    std::istream::sentry sentry(in);
-    if (!sentry)
-    {
-        return in;
+    std::istream &operator>>(std::istream &in, StringIO &&dest) {
+        std::istream::sentry sentry(in);
+        if (!sentry) {
+            return in;
+        }
+        return std::getline(in >> DelimiterIO{'"'}, dest.ref, '"');
     }
-    return std::getline(in >> DelimiterIO{ '"' }, dest.ref, '"');
-}
 
-std::istream &operator>>(std::istream &in, IntIO &&dest)
-{
-    std::istream::sentry sentry(in);
-    if (!sentry)
-    {
+    std::istream &operator>>(std::istream &in, IntIO &&dest) {
+        std::istream::sentry sentry(in);
+        if (!sentry) {
+            return in;
+        }
+
+        in >> dest.ref;
+
         return in;
     }
 
-    in >> dest.ref;
+    std::istream &operator>>(std::istream &in, AddArcIO &&dest) {
+        std::istream::sentry sentry(in);
+        if (!sentry) {
+            return in;
+        }
 
-    return in;
-}
+        std::string firstPoint = "";
+        std::string secondPoint = "";
+        int weight = -1;
 
-std::istream &operator>>(std::istream &in, AddArcIO &&dest){
-    std::istream::sentry sentry(in);
-    if (!sentry)
-    {
+        in >> StringIO{firstPoint};
+        in >> StringIO{secondPoint};
+        in >> IntIO{weight};
+
+        if (!check(in)) return in;
+
+        std::cout << "Arc between" << firstPoint << " and " << secondPoint << " with weight " << weight;
+        if (dest.graph.adArc(firstPoint, secondPoint, weight))
+            std::cout << " was added!\n";
+        else
+            std::cout << " wasn't added.\n";
+
         return in;
     }
 
-    std::string firstPoint = "";
-    std::string secondPoint = "";
-    int weight = -1;
+    std::istream &operator>>(std::istream &in, AddPointIO &&dest) {
+        std::istream::sentry sentry(in);
+        if (!sentry) {
+            return in;
+        }
 
-    in >> StringIO{firstPoint};
-    in >> StringIO{secondPoint};
-    in >> IntIO{weight};
+        std::string pointName = "";
 
-    if(!check(in)) return in;
+        in >> StringIO{pointName};
 
-    std::cout << "Arc between" << firstPoint << " and " << secondPoint << " with weight " << weight;
-    if(dest.graph.adArc(firstPoint, secondPoint, weight))
-        std::cout << " was added!\n";
-    else
-        std::cout << " wasn't added.\n";
+        if (!check(in)) return in;
 
-    return in;
-}
+        std::cout << "Point " << pointName;
 
-std::istream &operator>>(std::istream &in, AddPointIO &&dest){
-    std::istream::sentry sentry(in);
-    if (!sentry)
-    {
+        if (dest.graph.addPoint(pointName))
+            std::cout << " added!\n";
+        else
+            std::cout << " not added.\n";
+
         return in;
     }
 
-    std::string pointName = "";
+    std::istream &operator>>(std::istream &in, HasArcIO &&dest) {
+        std::istream::sentry sentry(in);
+        if (!sentry) {
+            return in;
+        }
 
-    in >> StringIO{pointName};
+        std::string firstPoint = "";
+        std::string secondPoint = "";
 
-    if(!check(in)) return in;
+        in >> StringIO{firstPoint};
+        in >> StringIO{secondPoint};
 
-    std::cout << "Point " << pointName;
+        if (!check(in)) return in;
 
-    if(dest.graph.addPoint(pointName))
-        std::cout  << " added!\n";
-    else
-        std::cout << " not added.\n";
+        std::cout << "Arc between " << firstPoint << " and " << secondPoint;
+        if (dest.graph.isArcExists(firstPoint, secondPoint))
+            std::cout << " exists!\n";
+        else
+            std::cout << " don't exists.\n";
 
-    return in;
-}
-
-std::istream &operator>>(std::istream &in, HasArcIO &&dest) {
-    std::istream::sentry sentry(in);
-    if (!sentry)
-    {
         return in;
     }
 
-    std::string firstPoint = "";
-    std::string secondPoint = "";
+    std::istream &operator>>(std::istream &in, HasPointIO &&dest) {
+        std::istream::sentry sentry(in);
+        if (!sentry) {
+            return in;
+        }
 
-    in >> StringIO{firstPoint};
-    in >> StringIO{secondPoint};
+        std::string pointName = "";
 
-    if(!check(in)) return in;
+        in >> StringIO{pointName};
 
-    std::cout << "Arc between " << firstPoint << " and " << secondPoint;
-    if(dest.graph.isArcExists(firstPoint,secondPoint))
-        std::cout << " exists!\n";
-    else
-        std::cout << " don't exists.\n";
+        std::cout << pointName;
 
-    return in;
-}
+        if (!check(in)) return in;
 
-std::istream &operator>>(std::istream &in, HasPointIO &&dest) {
-    std::istream::sentry sentry(in);
-    if (!sentry)
-    {
+        std::cout << "Point " << pointName;
+
+        if (dest.graph.hasPoint(pointName))
+            std::cout << " exists!\n";
+        else
+            std::cout << " don't exists.\n";
+
         return in;
     }
 
-    std::string pointName = "";
+    std::istream &operator>>(std::istream &in, DeleteAcrIO &&dest) {
 
-    in >> StringIO{pointName};
+        std::istream::sentry sentry(in);
+        if (!sentry) {
+            return in;
+        }
 
-    std::cout << pointName;
+        std::string firstPoint = "";
+        std::string secondPoint = "";
 
-    if(!check(in)) return in;
+        in >> StringIO{firstPoint};
+        in >> StringIO{secondPoint};
 
-    std::cout << "Point " << pointName;
+        if (!check(in)) return in;
 
-    if(dest.graph.hasPoint(pointName))
-        std::cout << " exists!\n";
-    else
-        std::cout << " don't exists.\n";
+        std::cout << "Arc between " << firstPoint << " and " << secondPoint;
 
-    return in;
-}
+        if (dest.graph.deleteArc(firstPoint, secondPoint))
+            std::cout << " was deleted!\n";
+        else
+            std::cout << " wasn't deleted\n";
 
-std::istream &operator>>(std::istream &in, DeleteAcrIO &&dest){
-
-    std::istream::sentry sentry(in);
-    if (!sentry)
-    {
         return in;
     }
 
-    std::string firstPoint = "";
-    std::string secondPoint = "";
+    std::istream &operator>>(std::istream &in, DeletePointIO &&dest) {
 
-    in >> StringIO{firstPoint};
-    in >> StringIO{secondPoint};
+        std::istream::sentry sentry(in);
+        if (!sentry) {
+            return in;
+        }
 
-    if(!check(in)) return in;
+        std::string pointName = "";
 
-    std::cout << "Arc between " << firstPoint << " and " << secondPoint;
+        in >> StringIO{pointName};
 
-    if(dest.graph.deleteArc(firstPoint, secondPoint))
-        std::cout << " was deleted!\n";
-    else
-        std::cout << " wasn't deleted\n";
+        std::cout << pointName;
 
-    return in;
-}
+        if (!check(in)) return in;
 
-std::istream &operator>>(std::istream &in, DeletePointIO &&dest){
+        std::cout << "Point " << pointName;
 
-    std::istream::sentry sentry(in);
-    if (!sentry)
-    {
+        if (dest.graph.deletePoint(pointName))
+            std::cout << " was deleted!\n";
+        else
+            std::cout << " wasn't deleted.\n";
+
         return in;
     }
 
-    std::string pointName = "";
+    std::istream &operator>>(std::istream &in, IndexIO &&dest) {
 
-    in >> StringIO{pointName};
+        dest.index = -1;
 
-    std::cout << pointName;
+        std::string command = "";
 
-    if(!check(in)) return in;
+        in >> command;
 
-    std::cout << "Point " << pointName;
+        for (int i = 0; i < dest.names.size(); ++i) {
+            if (dest.names.at(i) == command) dest.index = i;
+        }
 
-    if(dest.graph.deletePoint(pointName))
-        std::cout << " was deleted!\n";
-    else
-        std::cout << " wasn't deleted.\n";
-
-    return in;
-}
-
-std::istream &operator>>(std::istream &in,IndexIO &&dest) {
-
-    dest.index = -1;
-
-    std::string command = "";
-
-    in >> command;
-
-    for (int i = 0; i < dest.names.size(); ++i) {
-        if(dest.names.at(i) == command) dest.index = i;
-    }
-
-    return in;
-}
-
-std::istream &operator>>(std::istream &in, FindDistanceIO &&dest) {
-
-    std::istream::sentry sentry(in);
-    if (!sentry)
-    {
         return in;
     }
 
-    std::vector<std::string> algorithmNames = {"DIJKSTRA", "BELLMAN-FORD", "WAVE"};
+    std::istream &operator>>(std::istream &in, FindDistanceIO &&dest) {
 
-    int algorithmIndex = -1;
+        std::istream::sentry sentry(in);
+        if (!sentry) {
+            return in;
+        }
 
-    in >> IndexIO{algorithmIndex, algorithmNames};
+        std::vector<std::string> algorithmNames = {"DIJKSTRA", "BELLMAN-FORD", "WAVE"};
 
-    std::string firstPoint = "";
-    std::string secondPoint = "";
+        int algorithmIndex = -1;
 
-    in >> StringIO{firstPoint};
-    in >> StringIO{secondPoint};
+        in >> IndexIO{algorithmIndex, algorithmNames};
 
-    if(!check(in)) return in;
+        std::string firstPoint = "";
+        std::string secondPoint = "";
 
-    switch (algorithmIndex) {
-        case 0:
-            dest.graph.dijkstraPathFinderAlgorithm(firstPoint,secondPoint);
-            break;
-        case 1:
-            dest.graph.bellmanFordPathFinderAlgorithm(firstPoint, secondPoint);
-            break;
-        case 2:
-            dest.graph.wavePathFinderAlgorithm(firstPoint, secondPoint);
-            break;
-    }
+        in >> StringIO{firstPoint};
+        in >> StringIO{secondPoint};
 
-    return in;
-}
+        if (!check(in)) return in;
 
-std::istream &operator>>(std::istream &in, CommandIO &&dest){
+        switch (algorithmIndex) {
+            case 0:
+                dest.graph.dijkstraPathFinderAlgorithm(firstPoint, secondPoint);
+                break;
+            case 1:
+                dest.graph.bellmanFordPathFinderAlgorithm(firstPoint, secondPoint);
+                break;
+            case 2:
+                dest.graph.wavePathFinderAlgorithm(firstPoint, secondPoint);
+                break;
+        }
 
-    std::istream::sentry sentry(in);
-    if (!sentry)
-    {
         return in;
     }
 
-    std::string buffer = "";
-    std::getline(in, buffer);
-    std::istringstream commandStream(buffer);
+    std::istream &operator>>(std::istream &in, CommandIO &&dest) {
 
-    std::vector<std::string> commandNames = {"ADDPOINT", "ADDARC", "HASARC", "HASPOINT", "DELETEARC", "DELETEPOINT", "FINDDISTANCE", "PRINT"};
+        std::istream::sentry sentry(in);
+        if (!sentry) {
+            return in;
+        }
 
-    int commandIndex;
+        std::string buffer = "";
+        std::getline(in, buffer);
+        std::istringstream commandStream(buffer);
 
-    commandStream >> IndexIO{commandIndex, commandNames};
 
-    switch (commandIndex) {
-        case 0:
-            commandStream >> AddPointIO{dest.graph};
-            break;
-        case 1:
-            commandStream >> AddArcIO{dest.graph};
-            break;
-        case 2:
-            commandStream >> HasArcIO{dest.graph};
-            break;
-        case 3:
-            commandStream >> HasPointIO{dest.graph};
-            break;
-        case 4:
-            commandStream >> DeleteAcrIO{dest.graph};
-            break;
-        case 5:
-            commandStream >> DeletePointIO{dest.graph};
-            break;
-        case 6:
-            commandStream >> FindDistanceIO{dest.graph};
-            break;
-        case 7:
-            dest.graph.print();
-            break;
-        default:
-            commandStream.setstate(std::ios::failbit);
-            break;
+        std::vector<std::string> commandNames = {"ADDPOINT", "ADDARC", "HASARC", "HASPOINT", "DELETEARC", "DELETEPOINT",
+                                                 "FINDDISTANCE", "PRINT"};
+        int commandIndex;
+
+        commandStream >> IndexIO{commandIndex, commandNames};
+
+        switch (commandIndex) {
+            case 0:
+                commandStream >> AddPointIO{dest.graph};
+                break;
+            case 1:
+                commandStream >> AddArcIO{dest.graph};
+                break;
+            case 2:
+                commandStream >> HasArcIO{dest.graph};
+                break;
+            case 3:
+                commandStream >> HasPointIO{dest.graph};
+                break;
+            case 4:
+                commandStream >> DeleteAcrIO{dest.graph};
+                break;
+            case 5:
+                commandStream >> DeletePointIO{dest.graph};
+                break;
+            case 6:
+                commandStream >> FindDistanceIO{dest.graph};
+                break;
+            case 7:
+                dest.graph.print();
+                break;
+            default:
+                commandStream.setstate(std::ios::failbit);
+                break;
+        }
+
+        if (commandStream.bad()) {
+            std::cout << "<INCORRECT COMMAND!>\n";
+        }
+
+        return in;
     }
-
-    if(commandStream.bad()) {
-        std::cout << "\n<INCORRECT COMMAND!>\n";
-        /*in.clear();
-        std::string buf;
-        std::getline(in, buf);*/
-    }
-
-    return in;
 }
 
 #endif //TP_COMMAND_STRUCT_H

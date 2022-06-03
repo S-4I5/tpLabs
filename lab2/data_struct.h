@@ -156,43 +156,24 @@ namespace iakov{
             return in;
         }
 
-        bool succ = false;
+        in >> DelimiterIO{'('};
 
-        while(!succ) {
+        in >> DelimiterIO{':'};
 
-            if (!in) {
-                in.clear();
-            }
+        Data input{};
 
-            std::string buffer = "";
-            std::getline(in, buffer, '(');
+        bool args[3] = {false, false, false};
 
-            char c = '0';
+        int curKey = 0;
 
-            in >> c;
-
-            while(c == '(' && !in.eof()){
-                in >> c;
-            }
-
-            if(c != ':'){
-                continue;
-            }
-
-            Data input{};
-
-            bool args[3] = {false, false, false};
-
-            int curKey = 0;
-
-            for (int i = 0; i < 3; ++i) {
-                in >> LabelIO{curKey};
-                if (!args[curKey - 1]) {
-                    args[curKey - 1] = true;
-                    switch (curKey) {
-                        case 1:
-                            in >> DoubleIO{input.key1};
-                            break;
+        for (int i = 0; i < 3; ++i) {
+            in >> LabelIO{curKey};
+            if (!args[curKey - 1]) {
+                args[curKey - 1] = true;
+                switch (curKey) {
+                    case 1:
+                        in >> DoubleIO{input.key1};
+                        break;
                         case 2:
                             in >> CharIO{input.key2};
                             break;
@@ -201,25 +182,19 @@ namespace iakov{
                             break;
                         default:
                             break;
-                    }
-                } else {
-                    if (in) in.setstate(std::ios::failbit);
                 }
-                in >> DelimiterIO{':'};
+            } else {
+                if (in) in.setstate(std::ios::failbit);
             }
-
-            in >> DelimiterIO{')'};
-
-            if(in.eof()){
-                in.setstate(std::ios::eofbit);
-                return in;
-            }
-
-            if (in) {
-                dest = input;
-                succ = true;
-            }
+            in >> DelimiterIO{':'};
         }
+
+        in >> DelimiterIO{')'};
+
+        if (in) {
+            dest = input;
+        }
+
         return in;
     }
 
