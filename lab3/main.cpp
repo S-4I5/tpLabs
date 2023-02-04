@@ -6,14 +6,9 @@
 #include "polygon_struct.h"
 #include "command_struct2.h"
 
-int cock(){
-    static int a = 0;
-    return ++a;
-}
-
 int main() {
 
-    /*std::vector<iakov::Polygon> data;
+    std::vector<iakov::Polygon> data;
     std::ifstream in("D:\\PTcodes\\c++\\TP\\lab3\\input.txt");
 
     std::copy(std::istream_iterator<iakov::Polygon>(in),std::istream_iterator<iakov::Polygon>(),std::back_inserter(data));
@@ -23,10 +18,5 @@ int main() {
 
     std::ifstream userIn("D:\\PTcodes\\c++\\TP\\lab3\\userInput.txt");
 
-    //while(userIn >> iakov::CommandIO{data});
-
-    while(userIn >>  iakov::CommandIO{data});*/
-
-    std::cout << cock() << cock() << cock();
-
+    while(userIn >>  iakov::CommandIO{data});
 }
